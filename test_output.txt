@@ -1,0 +1,200 @@
+﻿
+════════════════════════════════════════════════════════════
+  MediMax RAG — End-to-End Pipeline Test
+════════════════════════════════════════════════════════════
+────────────────────────────────────────────────────────────
+1. Health check
+.venv\Scripts\python.exe
+ : Traceback (most 
+recent call last):
+At line:1 char:82
++ ... HONUTF8 = "1"; .ve
+nv\Scripts\python.exe 
+test_pipeline.py 2>&1 | 
+Out-F ...
++                    ~~~
+~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo      
+        : NotSpecified  
+  : (Traceback (most    
+ recent call last)::    
+String) [], RemoteE    
+xception
+    + FullyQualifiedErr 
+   orId : NativeComman  
+  dError
+ 
+  File "E:\Projects\Medi
+Max\.venv\lib\site-packa
+ges\urllib3\connectionpo
+ol.py", line 534, in 
+_make_request
+    response = 
+conn.getresponse()
+  File "E:\Projects\Medi
+Max\.venv\lib\site-packa
+ges\urllib3\connection.p
+y", line 571, in 
+getresponse
+    httplib_response = 
+super().getresponse()
+  File "C:\Program Files
+\WindowsApps\PythonSoftw
+areFoundation.Python.3.9
+_3.9.3568.0_x64__qbz5n2k
+fra8p0\lib\http\client.p
+y", line 1377, in 
+getresponse
+    response.begin()
+  File "C:\Program Files
+\WindowsApps\PythonSoftw
+areFoundation.Python.3.9
+_3.9.3568.0_x64__qbz5n2k
+fra8p0\lib\http\client.p
+y", line 320, in begin
+    version, status, 
+reason = 
+self._read_status()
+  File "C:\Program Files
+\WindowsApps\PythonSoftw
+areFoundation.Python.3.9
+_3.9.3568.0_x64__qbz5n2k
+fra8p0\lib\http\client.p
+y", line 281, in 
+_read_status
+    line = str(self.fp.r
+eadline(_MAXLINE + 1), 
+"iso-8859-1")
+  File "C:\Program Files
+\WindowsApps\PythonSoftw
+areFoundation.Python.3.9
+_3.9.3568.0_x64__qbz5n2k
+fra8p0\lib\socket.py", 
+line 704, in readinto
+    return 
+self._sock.recv_into(b)
+socket.timeout: timed 
+out
+
+The above exception was 
+the direct cause of the 
+following exception:
+
+Traceback (most recent 
+call last):
+  File "E:\Projects\Medi
+Max\.venv\lib\site-packa
+ges\requests\adapters.py
+", line 644, in send
+    resp = conn.urlopen(
+  File "E:\Projects\Medi
+Max\.venv\lib\site-packa
+ges\urllib3\connectionpo
+ol.py", line 841, in 
+urlopen
+    retries = 
+retries.increment(
+  File "E:\Projects\Medi
+Max\.venv\lib\site-packa
+ges\urllib3\util\retry.p
+y", line 490, in 
+increment
+    raise 
+reraise(type(error), 
+error, _stacktrace)
+  File "E:\Projects\Medi
+Max\.venv\lib\site-packa
+ges\urllib3\util\util.py
+", line 39, in reraise
+    raise value
+  File "E:\Projects\Medi
+Max\.venv\lib\site-packa
+ges\urllib3\connectionpo
+ol.py", line 787, in 
+urlopen
+    response = 
+self._make_request(
+  File "E:\Projects\Medi
+Max\.venv\lib\site-packa
+ges\urllib3\connectionpo
+ol.py", line 536, in 
+_make_request
+    self._raise_timeout(
+err=e, url=url, timeout_
+value=read_timeout)
+  File "E:\Projects\Medi
+Max\.venv\lib\site-packa
+ges\urllib3\connectionpo
+ol.py", line 367, in 
+_raise_timeout
+    raise 
+ReadTimeoutError(
+urllib3.exceptions.ReadT
+imeoutError: HTTPConnect
+ionPool(host='127.0.0.1'
+, port=8080): Read 
+timed out. (read 
+timeout=10)
+
+During handling of the 
+above exception, 
+another exception 
+occurred:
+
+Traceback (most recent 
+call last):
+  File "E:\Projects\Medi
+Max\test_pipeline.py", 
+line 112, in <module>
+    main()
+  File "E:\Projects\Medi
+Max\test_pipeline.py", 
+line 94, in main
+    check_health()
+  File "E:\Projects\Medi
+Max\test_pipeline.py", 
+line 22, in check_health
+    r = requests.get(f"{
+BASE}/api/health", 
+timeout=10)
+  File "E:\Projects\Medi
+Max\.venv\lib\site-packa
+ges\requests\api.py", 
+line 73, in get
+    return 
+request("get", url, 
+params=params, **kwargs)
+  File "E:\Projects\Medi
+Max\.venv\lib\site-packa
+ges\requests\api.py", 
+line 59, in request
+    return session.reque
+st(method=method, 
+url=url, **kwargs)
+  File "E:\Projects\Medi
+Max\.venv\lib\site-packa
+ges\requests\sessions.py
+", line 589, in request
+    resp = 
+self.send(prep, 
+**send_kwargs)
+  File "E:\Projects\Medi
+Max\.venv\lib\site-packa
+ges\requests\sessions.py
+", line 703, in send
+    r = 
+adapter.send(request, 
+**kwargs)
+  File "E:\Projects\Medi
+Max\.venv\lib\site-packa
+ges\requests\adapters.py
+", line 690, in send
+    raise 
+ReadTimeout(e, 
+request=request)
+requests.exceptions.Read
+Timeout: HTTPConnectionP
+ool(host='127.0.0.1', 
+port=8080): Read timed 
+out. (read timeout=10)

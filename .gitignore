@@ -1,0 +1,30 @@
+# Environments
+.env
+.venv
+__pycache__/
+*.pyc
+
+# Data & Storage
+/storage/
+/docs/
+*.sqlite3
+*.bin
+*.pickle
+
+# Logs
+*.log
+debug_stdout.txt
+debug_stderr.txt
+debug_output.txt
+server.log
+server_err.log
+server_crash.log
+startup_error.txt
+startup_output.txt
+log_tail.txt
+
+# Vercel / Build
+.vercel
+/node_modules/
+dist/
+build/

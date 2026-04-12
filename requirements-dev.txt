@@ -1,0 +1,22 @@
+# Development and Testing Dependencies
+# Install with: pip install -r requirements-dev.txt
+
+# Core testing framework
+pytest>=8.0.0
+pytest-cov>=4.1.0          # Coverage reporting
+pytest-asyncio>=0.23.0     # Async test support (for async routes/handlers)
+pytest-xdist>=3.5.0        # Parallel test execution
+pytest-mock>=3.12.0        # Mocking utilities (pytest-mock integration)
+
+# Test utilities
+responses>=0.25.0          # HTTP request mocking
+faker>=21.0.0              # Fake data generation
+hypothesis>=6.99.0         # Property-based testing
+
+# Code quality (optional but recommended)
+ruff>=0.1.0                # Fast Python linter
+mypy>=1.8.0                # Static type checking
+pre-commit>=3.6.0          # Git hooks for pre-commit checks
+
+# Note: Main dependencies are in requirements.txt
+# This file only contains development/testing extras

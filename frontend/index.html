@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediMax — Medical AI RAG System</title>
+  <meta name="description" content="Production-grade anti-hallucination Retrieval-Augmented Generation system for medical information powered by Mistral AI." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/css/style.css" />
+</head>
+<body>
+
+<!-- ── Ambient Background ───────────────────────────────────── -->
+<div class="ambient" aria-hidden="true">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<!-- ── Header ──────────────────────────────────────────────── -->
+<header class="header" role="banner">
+  <div class="header-inner">
+    <a href="#" class="logo" aria-label="MediMax home">
+      <div class="logo-icon" aria-hidden="true">
+        <!-- cross icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 2v20M2 12h20"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="logo-name">MediMax</span>
+        <span class="logo-tagline">Medical RAG System</span>
+      </div>
+    </a>
+
+    <nav class="header-nav" role="navigation" aria-label="Main navigation">
+      <button class="nav-btn active" data-panel="query" id="nav-query">Query</button>
+      <button class="nav-btn" data-panel="ingest" id="nav-ingest">Ingest Documents</button>
+      <button class="nav-btn" data-panel="stats" id="nav-stats">System Stats</button>
+    </nav>
+
+    <div class="header-status" role="status" aria-live="polite" aria-label="API status">
+      <div class="status-dot" id="status-dot"></div>
+      <span class="status-text" id="status-text">Connecting…</span>
+    </div>
+  </div>
+</header>
+
+<!-- ── Main ────────────────────────────────────────────────── -->
+<main class="main" role="main">
+
+  <!-- ════════════ QUERY PANEL ════════════ -->
+  <section class="panel active" id="panel-query" aria-labelledby="nav-query">
+
+    <div class="hero">
+      <h1 class="hero-title">Ask <span class="gradient-text">Medical Questions</span><br/>Get Grounded Answers</h1>
+      <p class="hero-sub">Powered by Mistral AI with strict anti-hallucination controls. Every answer is sourced from your indexed medical literature.</p>
+    </div>
+
+    <!-- Query card -->
+    <div class="glass-card query-card">
+      <div class="query-top">
+        <div class="query-input-wrap">
+          <svg class="query-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+          </svg>
+          <textarea
+            id="query-input"
+            class="query-input"
+            placeholder="e.g. What are the first-line treatments for Type 2 diabetes according to ADA guidelines?"
+            rows="3"
+            aria-label="Medical question input"
+          ></textarea>
+        </div>
+        <div class="query-actions">
+          <button class="btn-primary" id="btn-query" aria-label="Submit query">
+            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+            Ask AI
+          </button>
+          <button class="btn-icon-only" id="btn-clear" title="Clear input" aria-label="Clear query">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 6L6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters-section">
+        <details id="filters-details">
+          <summary class="filters-toggle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+            </svg>
+            Advanced Filters
+          </summary>
+          <div class="filters-grid" id="filters-grid">
+            <div class="filter-group">
+              <label for="filter-domain">Medical Domain</label>
+              <select id="filter-domain">
+                <option value="">All Domains</option>
+                <option value="cardiology">Cardiology</option>
+                <option value="oncology">Oncology</option>
+                <option value="neurology">Neurology</option>
+                <option value="endocrinology">Endocrinology</option>
+                <option value="pharmacology">Pharmacology</option>
+                <option value="immunology">Immunology</option>
+                <option value="infectious disease">Infectious Disease</option>
+                <option value="radiology">Radiology</option>
+                <option value="general medicine">General Medicine</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="filter-year">Year From</label>
+              <input type="number" id="filter-year" placeholder="e.g. 2020" min="1900" max="2030" />
+            </div>
+            <div class="filter-group">
+              <label for="filter-k">Max Sources (K)</label>
+              <select id="filter-k">
+                <option value="4">4 sources</option>
+                <option value="6" selected>6 sources</option>
+                <option value="8">8 sources</option>
+                <option value="10">10 sources</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label for="filter-threshold">Min Confidence</label>
+              <select id="filter-threshold">
+                <option value="0.2">0.2 — Broad</option>
+                <option value="0.35" selected>0.35 — Standard</option>
+                <option value="0.5">0.5 — Strict</option>
+                <option value="0.65">0.65 — Very Strict</option>
+              </select>
+            </div>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <!-- Loading state -->
+    <div class="glass-card loading-state hidden" id="loading-state" aria-live="polite" aria-label="Processing query">
+      <div class="pulse-ring" aria-hidden="true"></div>
+      <div class="loading-text">
+        <span class="loading-main" id="loading-main">Retrieving relevant documents…</span>
+        <span class="loading-sub" id="loading-sub">Searching 0 indexed chunks</span>
+      </div>
+    </div>
+
+    <!-- Answer card -->
+    <div class="glass-card answer-card hidden" id="answer-card">
+      <div class="answer-header">
+        <div class="answer-meta">
+          <div class="confidence-badge" id="confidence-badge">
+            <div class="conf-dot"></div>
+            <span id="confidence-label">High Confidence</span>
+          </div>
+          <div class="meta-chips" id="meta-chips"></div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn-secondary btn-sm" id="btn-copy" title="Copy answer">Copy</button>
+          <button class="btn-secondary btn-sm" id="btn-new-query">New Query</button>
+        </div>
+      </div>
+
+      <div class="answer-body" id="answer-body"></div>
+
+      <div class="sources-section" id="sources-section">
+        <div class="sources-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/>
+          </svg>
+          Referenced Sources
+        </div>
+        <div class="sources-list" id="sources-list"></div>
+      </div>
+    </div>
+
+    <!-- Example queries -->
+    <div class="examples-section" id="examples-section">
+      <p class="examples-title">— Try an example query —</p>
+      <div class="examples-grid">
+        <button class="example-card" data-query="What are the first-line treatment options for hypertension according to recent guidelines?">
+          <span class="example-icon">🫀</span>
+          <p>First-line treatment for hypertension according to recent guidelines</p>
+        </button>
+        <button class="example-card" data-query="What is the recommended HbA1c target for Type 2 diabetes patients?">
+          <span class="example-icon">🩸</span>
+          <p>Recommended HbA1c target for Type 2 diabetes management</p>
+        </button>
+        <button class="example-card" data-query="What are the key risk factors and prevention strategies for ischemic stroke?">
+          <span class="example-icon">🧠</span>
+          <p>Key risk factors and prevention strategies for ischemic stroke</p>
+        </button>
+        <button class="example-card" data-query="What is the mechanism of action of checkpoint inhibitors in cancer immunotherapy?">
+          <span class="example-icon">🔬</span>
+          <p>Mechanism of checkpoint inhibitors in cancer immunotherapy</p>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ INGEST PANEL ════════════ -->
+  <section class="panel" id="panel-ingest" aria-labelledby="nav-ingest">
+    <div class="panel-header">
+      <h2 class="panel-title">Ingest <span class="gradient-text">Documents</span></h2>
+      <p class="panel-sub">Upload PDFs, markdown files, or plain text. The system will chunk, embed, and index them automatically.</p>
+    </div>
+
+    <!-- Upload zone -->
+    <div class="glass-card upload-zone" id="upload-zone" role="button" tabindex="0" aria-label="Drop files here or click to browse">
+      <div class="upload-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/>
+          <path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/>
+        </svg>
+      </div>
+      <p class="upload-title">Drop files here or click to browse</p>
+      <p class="upload-sub">Supported formats: PDF, TXT, MD, HTML · Max 50 MB each</p>
+      <button class="btn-primary" id="btn-browse" type="button">Choose Files</button>
+      <input type="file" id="file-input" class="file-input-hidden" multiple accept=".pdf,.txt,.md,.html" aria-label="File picker" />
+    </div>
+
+    <!-- Progress -->
+    <div class="upload-progress hidden" id="upload-progress">
+      <div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+      <p class="progress-text" id="progress-text">Processing…</p>
+    </div>
+
+    <!-- Results -->
+    <div class="upload-results" id="upload-results"></div>
+
+    <!-- Sources list -->
+    <div class="glass-card sources-panel" id="sources-panel">
+      <div class="sources-panel-header">
+        <h3>Indexed Sources</h3>
+        <button class="btn-secondary btn-sm" id="btn-refresh-sources">↻ Refresh</button>
+      </div>
+      <div class="sources-panel-body" id="sources-panel-body">
+        <p class="empty-state">No documents indexed yet.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ════════════ STATS PANEL ════════════ -->
+  <section class="panel" id="panel-stats" aria-labelledby="nav-stats">
+    <div class="panel-header">
+      <h2 class="panel-title">System <span class="gradient-text">Stats</span></h2>
+      <p class="panel-sub">Real-time overview of the vector database, retrieval settings, and model configuration.</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="glass-card stat-card">
+        <div class="stat-icon">📄</div>
+        <div class="stat-value-wrap">
+          <div class="stat-value" id="stat-chunks">—</div>
+          <div id="sync-indicator" class="sync-indicator hidden" title="Background ingestion in progress">
+            <div class="sync-spinner"></div>
+            <span>Syncing…</span>
+          </div>
+        </div>
+        <div class="stat-label">Indexed Chunks</div>
+      </div>
+      <div class="glass-card stat-card">
+        <div class="stat-icon">📚</div>
+        <div class="stat-value" id="stat-docs">—</div>
+        <div class="stat-label">Source Documents</div>
+      </div>
+      <div class="glass-card stat-card">
+        <div class="stat-icon">🧬</div>
+        <div class="stat-value" id="stat-model">—</div>
+        <div class="stat-label">Embedding Model</div>
+      </div>
+      <div class="glass-card stat-card">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-value" id="stat-llm">—</div>
+        <div class="stat-label">LLM Model</div>
+      </div>
+    </div>
+
+    <div class="glass-card config-card">
+      <p class="config-title">Retrieval Configuration</p>
+      <div class="config-grid" id="config-grid">
+        <div class="config-row"><span>Retrieval Strategy</span><code id="cfg-strategy">—</code></div>
+        <div class="config-row"><span>Similarity Threshold</span><code id="cfg-threshold">—</code></div>
+        <div class="config-row"><span>Top K Results</span><code id="cfg-topk">—</code></div>
+        <div class="config-row"><span>Chunk Size</span><code id="cfg-chunk-size">—</code></div>
+        <div class="config-row"><span>Chunk Overlap</span><code id="cfg-chunk-overlap">—</code></div>
+        <div class="config-row"><span>Vector Store</span><code id="cfg-vectorstore">ChromaDB</code></div>
+        <div class="config-row"><span>Temperature</span><code id="cfg-temperature">0.0</code></div>
+        <div class="config-row"><span>Anti-Hallucination</span><code id="cfg-anti-halluc" style="color:var(--green-400)">ENABLED</code></div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ── Toast Container ──────────────────────────────────────── -->
+<div class="toast-container" id="toast-container" aria-live="polite" aria-label="Notifications"></div>
+
+<script src="/static/js/app.js"></script>
+</body>
+</html>
