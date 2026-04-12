@@ -1,0 +1,25 @@
+# Ignore local data folders
+docs/
+storage/
+evaluate/
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore environment files
+.env
+.venv
+env/
+venv/
+
+# Ignore Git
+.git
+.gitignore
+.gitmodules
+
+# Logs
+*.log
+*.txt
